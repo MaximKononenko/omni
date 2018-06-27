@@ -1,0 +1,18 @@
+<settings>
+   <servers>
+       <server>
+           <id>central</id>
+           <username>reader</username>
+           <password>lm33716</password>
+       </server>
+       <server>
+           <id>snapshots</id>
+           <username>reader</username>
+           <password>lm33716</password>
+       </server>
+   </servers>
+   <mirrors/>
+   <proxies/>
+   <profiles/>
+   <activeProfiles/>
+</settings>
