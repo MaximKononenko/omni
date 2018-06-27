@@ -31,7 +31,7 @@ pipeline {
                     script {
                         sh("ls -la && pwd && id")
                         UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
-                        String[] UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        String[] UrlsToCheck = new File("./urls_${URLS_FILE}.txt")
 
                         UrlsToCheck.each {
                             println it
