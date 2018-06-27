@@ -12,7 +12,7 @@ pipeline {
             URLS_FILE = "${params.URLS_FILE}"
     }
 
-    // stages {
+    stages {
     //         stage('Build Stage') {
     //             steps {
     //                 echo "Build'n'Push"
@@ -50,5 +50,5 @@ pipeline {
                     }
                 }
             }
-    
+    }
 }
