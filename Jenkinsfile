@@ -12,24 +12,24 @@ pipeline {
             URLS_FILE = "${params.URLS_FILE}"
     }
 
-    stages {
-            stage('Build Stage') {
-                steps {
-                    echo "Build'n'Push"
-                    script {
-                        def customImage = docker.build("catalinalab/hello-world:${BUILD_NUMBER}")
-                        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-catalinalab') {
-                            echo "Pushing artifacts to registry"
-                            customImage.push()
-                        }
-                    }
-                }
-            }
+    // stages {
+    //         stage('Build Stage') {
+    //             steps {
+    //                 echo "Build'n'Push"
+    //                 script {
+    //                     def customImage = docker.build("catalinalab/hello-world:${BUILD_NUMBER}")
+    //                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-catalinalab') {
+    //                         echo "Pushing artifacts to registry"
+    //                         customImage.push()
+    //                     }
+    //                 }
+    //             }
+    //         }
 
             stage('Testing') {
                 steps {
                     script {
-                        sh("ls -la && pwd && id")
+                        sh("chmod -R 777 ./* && ls -la && pwd && id")
                         UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
                         String[] UrlsToCheck = new File("./urls_${URLS_FILE}.txt")
 
