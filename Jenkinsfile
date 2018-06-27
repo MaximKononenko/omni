@@ -31,10 +31,9 @@ pipeline {
                     script {
                         sh("chmod -R 777 ./* && ls -la && pwd && id")
                         UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
-                        String[] UrlsToCheck = new File("/home/jenkins/workspace/omni/urls_OK.txt")
-                        //urls_${URLS_FILE}.txt")
-
-                        UrlsToCheck.each {
+                        UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        sh("cat ${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        UrlsToCheck {
                             println it
                         }
 
