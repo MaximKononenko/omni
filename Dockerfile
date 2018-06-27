@@ -25,7 +25,6 @@ FROM alpine:3.7
 RUN apk add --no-cache bash openjdk8
 
 COPY --from=builder /omni2buildjdk8/content/Main.jar /root/
-COPY ./resolv.conf /etc/resolv.conf
 
 WORKDIR /root
 
