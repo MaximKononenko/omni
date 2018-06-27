@@ -1,5 +1,5 @@
 pipeline {
-    import groovy.io.FileType
+    //import groovy.io.FileType
     agent{label 'swarm'} 
     parameters {
         string(name: 'URL_TO_CHECK', defaultValue: 'http://10.176.45.133:9180/mfd/celtra/carousel/USA/99/21EF69A1-E480-46CD-BACC-2C2BD1FC49C9', description: 'Specify URL to test.')        
@@ -32,7 +32,8 @@ pipeline {
                     script {
                         sh("chmod -R 777 ./* && ls -la && pwd && id")
                         UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
-                        String[] UrlsToCheck = new File("urls_${URLS_FILE}.txt")
+                        String[] UrlsToCheck = new File("/etc/hosts")
+                        //urls_${URLS_FILE}.txt")
 
                         UrlsToCheck.each {
                             println it
