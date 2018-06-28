@@ -31,12 +31,11 @@ pipeline {
                     script {
                         sh("chmod -R 777 ./* && ls -la && pwd && id")
                         UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
-                        def String[] UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
-                        //sh("cat ${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        String[] UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        sh("cat ${UrlFilePath}/urls_${URLS_FILE}.txt")
                         UrlsToCheck {
                             println it
                         }
-
                         for (int i = 0; i < UrlsToCheck.length; i++) {
                             CHECK_RESULT = sh (
                                 script: "curl -o /dev/null --silent --head --write-out '%{http_code}\\n' ${UrlsToCheck[i]}",
