@@ -31,8 +31,8 @@ pipeline {
                     script {
                         sh("chmod -R 777 ./* && ls -la && pwd && id")
                         UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
-                        UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
-                        sh("cat ${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        def String[] UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
+                        //sh("cat ${UrlFilePath}/urls_${URLS_FILE}.txt")
                         UrlsToCheck {
                             println it
                         }
