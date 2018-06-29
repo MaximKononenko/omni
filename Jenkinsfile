@@ -21,7 +21,7 @@ pipeline {
                 script {
                     sh("ls -la && pwd && id")
                     env.WORKSPACE = pwd()
-                    def words = new File("${env.WORKSPACE}/words.txt") as String[]
+                    def words = new File("${env.WORKSPACE}/urls_OK.txt") as String[]
                     words.each {
                         code = sh (
                                 script: "curl -o /dev/null --silent --head --write-out '%{http_code}\\n' $it",
