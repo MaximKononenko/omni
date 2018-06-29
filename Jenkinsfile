@@ -1,53 +1,41 @@
 pipeline {
-    agent{label 'swarm'} 
-    parameters {
-        string(name: 'URL_TO_CHECK', defaultValue: 'http://10.176.45.133:9180/mfd/celtra/carousel/USA/99/21EF69A1-E480-46CD-BACC-2C2BD1FC49C9', description: 'Specify URL to test.')        
-        choice(name: 'SKIP_TESTS', choices: 'true\nfalse', description: 'Switch OFF or switch ON tests. OFF by default.')        
-        choice(name: 'URLS_FILE', choices: 'OK\nNOT_OK', description: 'Please choice URLs file to test.')
+    agent none
+    stages {
+        stage('Build Stage') {
+            agent{label 'swarm'}
+            steps {
+                echo "Build'n'Push"
+                script {
+                    def customImage = docker.build("catalinalab/hello-world:${BUILD_NUMBER}")
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-catalinalab') {
+                        echo "Pushing artifacts to registry"
+                        customImage.push()
+                    }
+                }
+            }
         }
 
-    environment {
-            URL_TO_CHECK = "${params.URL_TO_CHECK}"
-            SKIP_TESTS = "${params.SKIP_TESTS}"
-            URLS_FILE = "${params.URLS_FILE}"
-    }
-
-    stages {
-    //         stage('Build Stage') {
-    //             steps {
-    //                 echo "Build'n'Push"
-    //                 script {
-    //                     def customImage = docker.build("catalinalab/hello-world:${BUILD_NUMBER}")
-    //                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-catalinalab') {
-    //                         echo "Pushing artifacts to registry"
-    //                         customImage.push()
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-            stage('Testing') {
-                steps {
-                    script {
-                        sh("chmod -R 777 ./* && ls -la && pwd && id")
-                        UrlFilePath = sh ( script: "pwd", returnStdout: true ).trim()
-                        String[] UrlsToCheck = new File("${UrlFilePath}/urls_${URLS_FILE}.txt")
-                        sh("cat ${UrlFilePath}/urls_${URLS_FILE}.txt")
-                        UrlsToCheck {
-                            println it
-                        }
-                        for (int i = 0; i < UrlsToCheck.length; i++) {
-                            CHECK_RESULT = sh (
-                                script: "curl -o /dev/null --silent --head --write-out '%{http_code}\\n' ${UrlsToCheck[i]}",
+        stage('Testing') {
+            agent{label 'master'}
+            steps {
+                script {
+                    sh("ls -la && pwd && id")
+                    env.WORKSPACE = pwd()
+                    def words = new File("${env.WORKSPACE}/words.txt") as String[]
+                    words.each {
+                        code = sh (
+                                script: "curl -o /dev/null --silent --head --write-out '%{http_code}\\n' $it",
                                 returnStdout: true
                             ).trim()
-
-                            echo "Check result code: ${CHECK_RESULT}"
-
-                            if (CHECK_RESULT != '200') sh('exit 1')
+                    
+                        if (code == 200) {
+                            println "$it - OK (code: $code)"
+                        } else {
+                           println "$it  - Bad! (code: $code)"
                         }
                     }
                 }
             }
+        }
     }
 }
