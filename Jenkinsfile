@@ -28,7 +28,7 @@ pipeline {
                                 returnStdout: true
                             ).trim()
                     
-                        if (code == 200) {
+                        if (code == "200") {
                             println "$it - OK (code: $code)"
                         } else {
                            println "$it  - Bad! (code: $code)"
